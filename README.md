@@ -105,6 +105,18 @@ claim and exhaustively checked the escape-independence over 12.8M cases; a real
 RNG-independence bug (an "ensemble" that was one splitmix stream phase-shifted)
 and three robustness/precision edges were caught and fixed.
 
-**Next — milestone 4:** Monte-Carlo over Zₚ (Haar measure = uniform digits);
-estimate a p-adic integral (e.g. `∫ |x|ₚˢ dx`) and match the closed form to
-`N^{−1/2}` error.
+**Milestone 4 — done & verified.** `include/padic/montecarlo.h` +
+`src/montecarlo.c` + `tests/test_montecarlo.c`, plus a demo (`src/montecarlo_demo.c`,
+`make mc`): Haar sampling on Zₚ (k uniform digits) and the local zeta integral
+`I(s) = ∫_{Zₚ} |x|ₚˢ dx = (1−p⁻¹)/(1−p^{−(s+1)})`. The Monte-Carlo mean of
+`|x|ₚˢ = p^{−sv}` matches the closed form (s=0 exact; `I(1), I(2)` recover milestone
+3's `⟨|X|ₚ⟩, ⟨|X|ₚ²⟩`), the reported Welford standard error matches `√(Var/N)` with
+`Var = I(2s) − I(s)²`, and the `N^{−1/2}` law is pinned by 200 independent runs
+whose scatter equals `√(Var/N)`. `make test` = 57 checks across the four suites; an
+adversarial review panel (math / C / test-adequacy — the first two found zero
+defects) + ASan/UBSan are clean, and the tests now pin per-value digit uniformity
+and the `O(p^{−k(s+1)})` truncation bias.
+
+**Next — milestone 5:** visualization — emit the tree + a highlighted walk and the
+MSD(t) / convergence curves as SVG from C, or export the CSVs to the Backporch site
+for a `/proofs` or `/pillars` demo.
