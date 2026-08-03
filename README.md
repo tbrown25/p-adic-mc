@@ -92,5 +92,19 @@ suites; within-shell uniformity, α∈{0.5,1,2}, p∈{2,3}, and vertex-transitiv
 are pinned, and an adversarial review panel (math / C / test-adequacy) plus an
 ASan+UBSan pass are clean.
 
-**Next — milestone 3:** an ensemble of walkers → MSD(t) in the p-adic metric;
-reproduce the log-periodic anomalous-diffusion signature (`diffusion.c`).
+**Milestone 3 — done & verified.** `include/padic/diffusion.h` + `src/diffusion.c`
++ `tests/test_diffusion.c`, plus an ensemble demo (`src/diffusion_demo.c`,
+`make diffuse`): the exact escape-time hierarchy `τ(m) = 1/p_esc(m)` with
+`τ(m+1)/τ(m) → p^α` (the log-periodic scale), the equilibrium closed forms
+(`⟨s⟩, ⟨|X|ₚ⟩, ⟨|X|ₚ²⟩` over the uniform law on pⁿ leaves), and the ensemble
+**MSD(t)**. The measured `⟨s(t)⟩` climbs ~one tree level per factor `p^α` in `t` —
+the discrete-scale-invariance staircase — then relaxes to those closed forms.
+`make test` = 46 checks across the three suites; an adversarial review panel
+(math / C / test-adequacy) + ASan/UBSan are clean. The math lens re-derived every
+claim and exhaustively checked the escape-independence over 12.8M cases; a real
+RNG-independence bug (an "ensemble" that was one splitmix stream phase-shifted)
+and three robustness/precision edges were caught and fixed.
+
+**Next — milestone 4:** Monte-Carlo over Zₚ (Haar measure = uniform digits);
+estimate a p-adic integral (e.g. `∫ |x|ₚˢ dx`) and match the closed form to
+`N^{−1/2}` error.
