@@ -1,14 +1,19 @@
 // src/padic.c — Z/p^k arithmetic on base-p digit strings.
 #include "padic/padic.h"
 
+#include <assert.h>
 #include <math.h>
 
 padic padic_zero(int p, int k) {
+    // Every padic is born here (from_ull and the arithmetic results all route
+    // through padic_zero), so guarding precision once keeps the fixed-size digit
+    // buffer from ever overflowing.
+    assert(p >= 2 && k >= 1 && k <= PADIC_MAXK);
     padic r;
     r.p = p;
     r.k = k;
-    for (int i = 0; i < k; i++) r.a[i] = 0;
-    return r;
+    for (int i = 0; i < PADIC_MAXK; i++) r.a[i] = 0;  // clear the whole buffer so
+    return r;                                         // struct copies are fully defined
 }
 
 padic padic_from_ull(int p, int k, unsigned long long n) {
@@ -53,15 +58,15 @@ padic padic_sub(const padic *x, const padic *y) {
 }
 
 padic padic_mul(const padic *x, const padic *y) {
-    long acc[PADIC_MAXK];
+    long long acc[PADIC_MAXK];             // 64-bit even on LLP64 (long is 32-bit there)
     for (int i = 0; i < x->k; i++) acc[i] = 0;
     for (int i = 0; i < x->k; i++)         // schoolbook convolution; terms of degree >= k drop
         for (int j = 0; i + j < x->k; j++)
-            acc[i + j] += (long)x->a[i] * (long)y->a[j];
+            acc[i + j] += (long long)x->a[i] * (long long)y->a[j];
     padic r = padic_zero(x->p, x->k);
-    long carry = 0;
+    long long carry = 0;
     for (int i = 0; i < x->k; i++) {
-        long s = acc[i] + carry;
+        long long s = acc[i] + carry;
         r.a[i] = (int)(s % x->p);
         carry = s / x->p;
     }

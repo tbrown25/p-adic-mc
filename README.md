@@ -77,11 +77,20 @@ integrals. Both are cheap, discrete, and tree-shaped — a natural fit for C.
 ## Status
 
 **Milestone 1 — done & verified.** `include/padic/padic.h` + `src/padic.c` +
-`tests/test_padic.c`, dependency-free C, `make test` (15/15 pass): Z/pᵏ arithmetic
-(add/sub/mul with carry, `neg` as base-p complement), valuation, `|·|ₚ`, distance,
-the ultrametric strong-triangle inequality, and the Hensel headline
-`(1−p)·(1+p+p²+…) ≡ 1`. Numbers are base-p digit strings (little-endian).
+`tests/test_padic.c`: Z/pᵏ arithmetic (add/sub/mul with carry, `neg` as base-p
+complement), valuation, `|·|ₚ`, distance, the ultrametric strong-triangle
+inequality, and the Hensel headline `(1−p)·(1+p+p²+…) ≡ 1`. Numbers are base-p
+digit strings (little-endian).
 
-**Next — milestone 2:** the ball/tree view + one ultrametric random walk
-(`tree.c`): tree distance = depth of the last common ancestor; jump kernel
-`∝ p^{−(α+1)·dist}`.
+**Milestone 2 — done & verified.** `include/padic/tree.h` + `src/tree.c` +
+`tests/test_tree.c`, plus a trajectory demo (`src/walk_demo.c`, `make walk`):
+the tree metric (common-ancestor depth `c = vₚ(x−y)`, separation `s = n−c`), the
+shell count `(p−1)pˢ⁻¹`, and one ultrametric random walk with the Vladimirov jump
+kernel `w ∝ p^{−(α+1)s} ∝ |x−y|ₚ^{−(α+1)}`. Each step is O(n): draw a shell
+`∝ p^{−αs}`, then a uniform leaf inside it. `make test` = 34 checks across both
+suites; within-shell uniformity, α∈{0.5,1,2}, p∈{2,3}, and vertex-transitivity
+are pinned, and an adversarial review panel (math / C / test-adequacy) plus an
+ASan+UBSan pass are clean.
+
+**Next — milestone 3:** an ensemble of walkers → MSD(t) in the p-adic metric;
+reproduce the log-periodic anomalous-diffusion signature (`diffusion.c`).
