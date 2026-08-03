@@ -76,5 +76,12 @@ integrals. Both are cheap, discrete, and tree-shaped — a natural fit for C.
 
 ## Status
 
-Sketch only. Next concrete step: milestone 1 (`padic.c` + tests) — structured
-like `svm-cpp` (Makefile + tests, dependency-free C, CMake optional).
+**Milestone 1 — done & verified.** `include/padic/padic.h` + `src/padic.c` +
+`tests/test_padic.c`, dependency-free C, `make test` (15/15 pass): Z/pᵏ arithmetic
+(add/sub/mul with carry, `neg` as base-p complement), valuation, `|·|ₚ`, distance,
+the ultrametric strong-triangle inequality, and the Hensel headline
+`(1−p)·(1+p+p²+…) ≡ 1`. Numbers are base-p digit strings (little-endian).
+
+**Next — milestone 2:** the ball/tree view + one ultrametric random walk
+(`tree.c`): tree distance = depth of the last common ancestor; jump kernel
+`∝ p^{−(α+1)·dist}`.
