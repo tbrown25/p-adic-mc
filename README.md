@@ -52,6 +52,18 @@ integrals. Both are cheap, discrete, and tree-shaped — a natural fit for C.
 4. Monte Carlo integral over Zₚ; match the closed form to N⁻¹ᐟ² error.
 5. Visualization (SVG from C, or exported to the site).
 
+## Figures
+
+`make viz` renders three SVGs, dependency-free and straight from C, to `figures/`:
+
+- [`figures/tree.svg`](figures/tree.svg) — the tree of Zₚ-balls with one ultrametric
+  walk; each jump arcs up to the two leaves' common ancestor and back, colored by
+  separation (blue = local, red = root-deep).
+- [`figures/relaxation.svg`](figures/relaxation.svg) — the log-periodic staircase
+  `⟨s(t)⟩` on a log-t axis, gridlines at `t = pᵏ`.
+- [`figures/convergence.svg`](figures/convergence.svg) — the Monte-Carlo `1/√N`
+  error on log-log axes against a slope-`−½` reference.
+
 ## Why it's *research*, not just a portfolio piece
 
 - **P10 (number theory).** The p-adic world is where p-adic L-functions, p-adic
@@ -117,6 +129,16 @@ adversarial review panel (math / C / test-adequacy — the first two found zero
 defects) + ASan/UBSan are clean, and the tests now pin per-value digit uniformity
 and the `O(p^{−k(s+1)})` truncation bias.
 
-**Next — milestone 5:** visualization — emit the tree + a highlighted walk and the
-MSD(t) / convergence curves as SVG from C, or export the CSVs to the Backporch site
-for a `/proofs` or `/pillars` demo.
+**Milestone 5 — done & verified.** `include/padic/svg.h` + `src/svg.c` (a tiny
+dependency-free SVG writer) and `include/padic/viz.h` + `src/viz.c` +
+`src/viz_demo.c` (`make viz`) render the three [figures](#figures) above straight
+from C. `make test` = 72 checks across the five suites; the geometry (node
+centering, the common-ancestor jump paths, the log-t and log-log maps, the slope
+`−½` reference) is verified by an adversarial review panel + ASan/UBSan, and the
+tests pin the element mix, the centered root, the log-t axis (vs linear), and
+per-figure determinism.
+
+**The program (M1–M5) is complete.** Natural next steps: wire the figures into a
+Backporch `/proofs` or `/pillars` demo with KaTeX labels; or push into the open
+research wedge — the Vladimirov heat kernel `∂ₜu + Dᵅu = 0`, or a p-adic L-value
+Monte-Carlo probe.
